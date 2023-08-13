@@ -1,49 +1,22 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { register, failRegister, login, failLogin, logout, githubCallback } from "../controllers/sessions.controller.js"
 
 const router = Router();
 
-router.post('/register', passport.authenticate('register', { failureRedirect: '/failregister' }), async (req, res) => {
-    console.log(req.session.user)
-    res.send({ status: "success", message: "User registered" });
-})
+router.post('/register', passport.authenticate('register', { failureRedirect: '/failregister' }), register)
 
-router.get('/failregister', (req, res) => {
-    res.status(400).send({ status: "error", error: "Registry fail" });
-});
+router.get('/failregister', failRegister);
 
-router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin'}), async (req, res) => {
-    try {
-        if (!req.user) return res.status(400).send({ status: "error", error: "Incorrect credentials" });
-        req.session.user = {
-            name: `${req.user.first_name} ${req.user.last_name}`,
-            email: req.user.email,
-            age: req.user.age
-        }
-        console.log("1", req.session.user)
-        res.send({ status: "success", payload: req.session.user, message: "¡Primer logueo realizado! :)" });
-    } catch (error) {
-        console.log(error)
-    }
-})
+router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin'}), login)
 
-router.get('/faillogin', (req, res) => {
-    res.status(400).send({ status: "error", error: "Login fail" });
-});
+router.get('/faillogin', failLogin);
 
-router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) return res.status(500).send({ status: "error", error: "Couldn't logout" });
-        res.redirect('/login');
-    })
-})
+router.get('/logout', logout)
 
 router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { });
 
-router.get('/githubcallback', passport.authenticate('github', { failureRedirect: 'api/sessions/login' }), async (req, res) => {
-    req.session.user = req.user;
-    res.redirect('/');
-});
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect: 'api/sessions/login' }), githubCallback);
 
 
 export default router;
