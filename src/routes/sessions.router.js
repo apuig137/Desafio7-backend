@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { register, failRegister, login, failLogin, logout, githubCallback } from "../controllers/sessions.controller.js"
+import { register, failRegister, login, failLogin, logout, githubCallback, successRegister } from "../controllers/sessions.controller.js"
 
 const router = Router();
 
-router.post('/register', passport.authenticate('register', { failureRedirect: '/failregister' }), register)
+router.post('/register', passport.authenticate('register', { failureRedirect: 'http://localhost:8080/api/sessions/failregister', successRedirect: 'http://localhost:8080/api/sessions/successRegister' }), register)
 
 router.get('/failregister', failRegister);
+
+router.get('/successRegister', successRegister);
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin'}), login)
 

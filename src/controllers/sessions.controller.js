@@ -1,14 +1,16 @@
 export const register = async (req, res) => {
     console.log(req.session)
-    if (req.isAuthenticated()) {
-        return res.redirect('/login'); // Reemplaza 'login' con la ruta a la que deseas redireccionar
-    }
     res.send({ status: "success", message: "User registered" });
 }
 
 export const failRegister = async (req, res) => {
     console.log("Error en el registro")
     res.status(400).send({ status: "error", error: "Registry fail" });
+}
+
+export const successRegister = async (req, res) => {
+    console.log("Usuarrio creado exitosamente")
+    res.redirect("/login")
 }
 
 export const login = async (req, res) => {
