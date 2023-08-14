@@ -10,7 +10,8 @@ export const failRegister = async (req, res) => {
 
 export const successRegister = async (req, res) => {
     console.log("Usuarrio creado exitosamente")
-    res.redirect("/login")
+    // preocupate que tu API retorne respuestas consistentes y no de redireccionar a una vista
+    res.status(200).send({ status: "success", message: "User created" });
 }
 
 export const login = async (req, res) => {
