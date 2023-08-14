@@ -8,18 +8,18 @@ import sessionsRouter from "./routes/sessions.router.js"
 import viewsRouter from "./routes/views.router.js"
 import handlebars from "express-handlebars"
 import __dirname from "./utils.js";
-import {Server} from "socket.io"
+import { Server } from "socket.io"
 import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
 import displayRoutes from "express-routemap";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import config from "../config.js";
+import config from "./config/config.js";
 
 const app = express()
 const PORT = 8080
 const MONGO = `${config.db}`
-const connection = mongoose.connect(MONGO, {
+mongoose.connect(MONGO, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -27,8 +27,8 @@ const connection = mongoose.connect(MONGO, {
 app.use(express.static(__dirname + '/public'))
 
 app.engine("handlebars", handlebars.engine())
-app.set("views",__dirname+"/views")
-app.set("view engine","handlebars")
+app.set("views", __dirname + "/views")
+app.set("view engine", "handlebars")
 
 app.use(session({
     store: MongoStore.create({
@@ -55,7 +55,7 @@ app.use("/api/realtimeproducts", realTimeProductsRouter)
 app.use("/api/chat", chatRouter)
 app.use("/api/sessions", sessionsRouter)
 
-const httpServer = app.listen(PORT,() => {
+const httpServer = app.listen(PORT, () => {
     displayRoutes(app)
     console.log(`Servidor arriba en el puerto ${PORT}`)
 })
