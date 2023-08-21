@@ -6,11 +6,16 @@ form.addEventListener('submit',e=>{
     const data = new FormData(form);
     const obj = {};
     data.forEach((value,key)=>obj[key]=value);
-    fetch('http://localhost:8080/api/sessions/register',{
+    fetch('/api/sessions/register',{
         method:'POST',
         body: JSON.stringify(obj),
         headers:{
             'Content-Type':'application/json'
         }
-    }).then(result=>result.json()).then(json=>console.log(json));
+    }).then(result=>result.json()).then(json=>{
+        console.log(json);
+        if(json.status === 'success'){
+            window.location.href = '/login';
+        }
+    });
 })

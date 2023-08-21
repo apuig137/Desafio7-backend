@@ -10,7 +10,7 @@ export const failRegister = async (req, res) => {
 
 export const successRegister = async (req, res) => {
     console.log("Usuarrio creado exitosamente")
-    res.redirect("/login")
+    res.status(200).send({ status: "success", message: "User created" });
 }
 
 export const login = async (req, res) => {
